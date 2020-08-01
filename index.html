@@ -192,15 +192,19 @@
   .output {
     display: none;
     margin-top: 50px;
-    min-height: 300px;
+    min-height: 370px;
     width: 500px;
     padding: 30px;
     text-align: center;
-    line-height: 2em;
     background: #eda1ab;
     border-radius: 20px;
     border: 2px solid #5c3517;
     overflow: auto;
+  }
+
+  .progress-message {
+    display: block;
+    margin-top: 15px;
   }
 
   @media (max-width: 900px) {
@@ -212,7 +216,8 @@
   @media (max-width: 510px) {
     .output {
       width: 100vw;
-      height: 65%;
+      height: calc(100vh - 230px);
+      min-height: 0;
       position: absolute;
       left: 0;
       bottom: 0;
@@ -243,16 +248,15 @@ document.querySelector(".startPlaying").onclick = () => {
 
 button.onclick = () => {
   counts++;
-  if (counts > 8) {
-    document.querySelector(".progress-message:nth-child(1)").remove();
-    document.querySelector("br:nth-child(1)").remove();
+  if (counts > 5) {
+    document.querySelector(".progress-message:last-child").remove();
   }
 
-  output.insertAdjacentHTML("beforeend", (function() {
+  output.insertAdjacentHTML("afterbegin", (function() {
     if (input.value.length === 4) {
-      return `<span class="progress-message">Введено ${input.value}, результат: ${getHint(secret, input.value)}</span> <br>`;
+      return `<span class="progress-message">Введено: ${input.value} <br> Результат: ${getHint(secret, input.value)}</span>`;
     } else {
-      return '<span class="progress-message">Ошибка! Введите 4-значное число</span> <br>'
+      return '<span class="progress-message">Ошибка! Введите 4-значное число</span>'
     }
   })());
 
