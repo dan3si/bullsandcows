@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <title>Bulls & Cows</title>
+  <link rel="shortcut icon" href="textures/cow-icon.png" type="image/png">
+</head>
+<body>
+  <div class="winBlock">
+		<div class="winMessage">
+			<div class="justFlexWrapper">
+				<span class="wasted">Вы угадали!</span>
+				<span class="score"></span>
+			</div>
+			<button class="playAgain">Играть снова</button>
+		</div>
+	</div>
+  
+  <div class="start">
+		<button class="startPlaying">Играть</button>
+		<div class="help"><img src="textures/info.jpg" alt="info"><span>Уагадайте число, загаданное компьютером, используя подсказки</span></div>
+  </div>
+  
+  <input type="number" class="input">
+  <button class="button">
+    <img src="textures/odder.png" alt="odder" class="button__img">
+  </button>
+  <p class="output"></p>
+
+</body>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    font-size: 1.1em;
+    padding: 0;
+    margin: 0;
+  }
+
+  .winBlock {
+		height: 100%;
+		width: 100%;
+		background: black;
+		position: absolute;
+		display: none;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		animation: loseblock .3s ease 1 forwards;
+	}
+
+  @keyframes loseblock{
+		0%{
+			opacity: 0;
+		}
+		100%{
+			opacity: 0.6;
+		}
+	}
+
+  .winMessage {
+    height: 300px;
+    width: 550px;
+    background: white;
+    border-radius: 30px;
+    border: 2px solid #5c3517;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .wasted {
+    display: block;
+    font-size: 4rem;
+  }
+
+  .score {
+    margin-top: 10px;
+    display: block;
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  button.playAgain {
+    height: 40px;
+    width: 150px;
+    border-radius: 20px;
+    background: #eda1ab;
+    border: none;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+
+  button.playAgain:hover {
+    border: 1px solid #5c3517;
+  }
+
+  .start {
+		height: 100%;
+		width: 100%;
+		background: black;
+		opacity: 0.6;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+    position: absolute;
+    transition: 0.5s;
+	}
+
+  .startPlaying {
+    height: 85px;
+    width: 300px;
+    border-radius: 80px;
+    background: #eda1ab;
+    border: none;
+    font-size: 2.1rem;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+  }
+
+  .startPlaying:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #eda1ab;
+    cursor: pointer;
+  }
+
+  .help {
+		padding: 10px;
+		margin-top: 150px;
+		font-size: 1.6rem;
+		background: white;
+		border-radius: 15px;
+		display: flex;
+		align-items: center;
+	}
+
+  .help img {
+    height: 50px;
+    width: 50px;
+    margin-left: 10px;
+    margin-right: 15px;
+  }
+
+  .input {
+    margin-top: 50px;
+    display: none;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    border: 2px solid #5c3517;
+    border-radius: 5px;
+    appearance: none;
+  }
+
+  .button {
+    display: none;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #fff;
+    border: none;
+  }
+
+  .button:hover {
+    transform: scale(1.1);
+  }
+
+  .button__img {
+    width: 100px;  
+  }
+
+  .output {
+    display: none;
+    margin-top: 50px;
+    min-height: 300px;
+    width: 500px;
+    padding: 30px;
+    text-align: center;
+    line-height: 2em;
+    background: #eda1ab;
+    border-radius: 20px;
+    border: 2px solid #5c3517;
+  }
+</style>
+<script type="text/javascript">
+
+let input = document.querySelector(".input");
+let output = document.querySelector(".output");
+let button = document.querySelector(".button");
+let start = document.querySelector(".start");
+let secret = String(Math.floor(Math.random() * 8999 + 1000));
+
+document.querySelector(".startPlaying").onclick = () => {
+  input.style.display = "block"
+  output.style.display = "block"
+  button.style.display = "block"
+  start.style.opacity = 0;
+  setTimeout(() => {
+    start.style.display = "none";
+  }, 500);
+}
+
+button.onclick = () => {
+  output.insertAdjacentHTML("beforeend", (function() {
+    if (input.value.length === 4) {
+      return `Введено ${input.value}, результат: ${getHint(secret, input.value)}`;
+    } else {
+      return 'Ошибка! Введите 4-значное число <br>'
+    }
+  })());
+
+  if (secret == input.value) {
+    output.innerHTML = null;
+    input.value = null;
+    output.style.display = "none";
+    input.style.display = "none";
+    button.style.display = "none"
+    document.querySelector(".winBlock").style.display = "flex";
+  }
+}
+
+document.querySelector(".playAgain").onclick = () => {
+  input.style.display = "block"
+  output.style.display = "block"
+  button.style.display = "block"
+  document.querySelector(".winBlock").style.display = "none";
+}
+
+var getHint = function(secret, guess) {
+	secret = secret.split("");
+	guess = guess.split("");
+
+	let bulls = 0;
+	let cows = 0;
+
+    for (let i in secret) {
+    	if (secret[i] === guess[i] && secret[i] != "&") {
+    		secret.splice(i, 1, "&");
+    		guess.splice(i, 1, "&")
+    		bulls++
+    	}
+    }
+
+    for (let i in secret) {
+    	for (let o in guess) {
+    		if (guess[o] === secret[i] && secret[i] != "&") {
+    			secret.splice(i, 1, "&");
+	    		guess.splice(o, 1, "&")
+	    		cows++
+    		}
+    	}
+    }
+
+    return `${bulls} быков и ${cows} коров <br>`
+};
+
+</script>
+</html>
