@@ -9,7 +9,7 @@
   <div class="winBlock">
 		<div class="winMessage">
 			<div class="justFlexWrapper">
-				<span class="wasted">Вы угадали!</span>
+				<span class="guessed">Вы угадали!</span>
 				<span class="score"></span>
 			</div>
 			<button class="playAgain">Играть снова</button>
@@ -72,7 +72,7 @@
     flex-direction: column;
   }
 
-  .wasted {
+  .guessed {
     display: block;
     font-size: 4rem;
   }
@@ -154,6 +154,12 @@
     border: 2px solid #5c3517;
     border-radius: 5px;
     appearance: none;
+    -moz-appearance:textfield;
+  }
+
+  .input::-webkit-outer-spin-button,
+  .input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
   }
 
   .button {
@@ -184,6 +190,7 @@
     background: #eda1ab;
     border-radius: 20px;
     border: 2px solid #5c3517;
+    overflow: auto;
   }
 </style>
 <script type="text/javascript">
@@ -193,6 +200,7 @@ let output = document.querySelector(".output");
 let button = document.querySelector(".button");
 let start = document.querySelector(".start");
 let secret = String(Math.floor(Math.random() * 8999 + 1000));
+let counts = 0;
 
 document.querySelector(".startPlaying").onclick = () => {
   input.style.display = "block"
@@ -205,11 +213,17 @@ document.querySelector(".startPlaying").onclick = () => {
 }
 
 button.onclick = () => {
+  counts++;
+  if (counts > 8) {
+    document.querySelector(".progress-message:nth-child(1)").remove();
+    document.querySelector("br:nth-child(1)").remove();
+  }
+
   output.insertAdjacentHTML("beforeend", (function() {
     if (input.value.length === 4) {
-      return `Введено ${input.value}, результат: ${getHint(secret, input.value)}`;
+      return `<span class="progress-message">Введено ${input.value}, результат: ${getHint(secret, input.value)}</span> <br>`;
     } else {
-      return 'Ошибка! Введите 4-значное число <br>'
+      return '<span class="progress-message">Ошибка! Введите 4-значное число</span> <br>'
     }
   })());
 
@@ -220,6 +234,8 @@ button.onclick = () => {
     input.style.display = "none";
     button.style.display = "none"
     document.querySelector(".winBlock").style.display = "flex";
+    document.querySelector(".score").innerHTML = `Потрачено ${counts} попыток`
+    counts = 0;
   }
 }
 
@@ -255,7 +271,7 @@ var getHint = function(secret, guess) {
     	}
     }
 
-    return `${bulls} быков и ${cows} коров <br>`
+    return `${bulls} быков и ${cows} коров`
 };
 
 </script>
