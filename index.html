@@ -231,8 +231,28 @@ let input = document.querySelector(".input");
 let output = document.querySelector(".output");
 let button = document.querySelector(".button");
 let start = document.querySelector(".start");
-let secret = String(Math.floor(Math.random() * 8999 + 1000));
 let counts = 0;
+let secret = (() => {
+  let first = Math.ceil(Math.random() * 10);
+
+  let second = Math.floor(Math.random() * 10);
+  while (second === first) {
+    second = Math.floor(Math.random() * 10);
+  }
+
+  let third = Math.floor(Math.random() * 10);
+  while (third === first || third === second) {
+    third = Math.floor(Math.random() * 10);
+  }
+
+  let fourth = Math.floor(Math.random() * 10);
+  while (fourth === first || fourth === second || fourth === third) {
+    fourth = Math.floor(Math.random() * 10);
+  }
+
+  return `${first}${second}${third}${fourth}`
+})();
+console.log(secret)
 
 document.querySelector(".startPlaying").onclick = () => {
   input.style.display = "block"
